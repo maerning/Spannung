@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escape aus Voltas Werkstatt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tue:#0f6e7a; --tue2:#14909f; --hell:#e6f3f5; --papier:#fbf7ee; --holz:#3b2a1e; --holz2:#5a4030;
+  --gold:#e7b04a; --rot:#c0392b; --gruen:#2e8b57; --text:#1f2a33; --grau:#6b7c93;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5;color:var(--text);
+  background:var(--holz) repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 2px,transparent 2px 60px);min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:12px 16px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#f6e7c8;padding:6px 2px 10px}
+header .t{font-family:"Gochi Hand",cursive;font-size:24px;line-height:1.1}
+.uhr{font-variant-numeric:tabular-nums;background:#000a;border:1px solid var(--gold);color:var(--gold);border-radius:10px;padding:4px 10px;font-weight:700;white-space:nowrap}
+.schluessel{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.schluessel span{width:34px;height:40px;border-radius:8px;border:2px dashed #f6e7c855;display:grid;place-items:center;font-family:"Gochi Hand",cursive;font-size:24px;color:#f6e7c8}
+.schluessel span.da{border:2px solid var(--gold);background:#e7b04a22;color:var(--gold)}
+.karte{background:var(--papier);border-radius:16px;padding:18px 18px 20px;box-shadow:0 6px 24px #0006;margin-bottom:14px}
+h1,h2{font-family:"Gochi Hand",cursive;font-weight:400;color:var(--tue);margin:0 0 8px;line-height:1.15}
+h1{font-size:34px} h2{font-size:28px}
+.kicker{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--grau);font-weight:700}
+.story{font-style:italic;border-left:4px solid var(--gold);padding:4px 0 4px 12px;margin:10px 0 14px;color:#4a3b2c}
+.heft{background:var(--hell);border:1.5px solid var(--tue);border-radius:12px;padding:12px 14px;margin:12px 0}
+.heft b.lbl{display:inline-block;background:var(--tue);color:#fff;border-radius:6px;padding:1px 8px;font-size:14px;margin-bottom:6px}
+.schloss{border:2px solid var(--holz2);border-radius:12px;padding:14px;margin:14px 0;background:#fff}
+.schloss .lbl{font-weight:700;color:var(--holz2);margin-bottom:8px}
+.loesung{background:#eaf6ee;border:1.5px solid var(--gruen);border-radius:12px;padding:12px 14px;margin:14px 0}
+.loesung .lbl{font-weight:700;color:var(--gruen)}
+table{border-collapse:collapse;width:100%;margin:6px 0;font-size:15px}
+td,th{border:1px solid #b9d6da;padding:5px 8px;text-align:left;vertical-align:top}
+th{background:var(--hell);color:var(--tue)}
+input[type=text],select{font:inherit;font-size:18px;padding:8px 10px;border:2px solid #b9c6cf;border-radius:10px;width:100%;background:#fff}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--tue)}
+.feld{margin:8px 0}
+.feld label{display:block;font-size:15px;color:#33424f;margin-bottom:3px}
+.zeile{display:flex;gap:10px;flex-wrap:wrap}
+.zeile .feld{flex:1 1 140px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer}
+.btn{background:var(--tue);color:#fff}
+.btn:disabled{background:#9fb3b8;cursor:not-allowed}
+.btn2{background:#fff;color:var(--tue);border:2px solid var(--tue)}
+.btnt{background:#fff3d6;color:#7a5410;border:2px solid var(--gold);font-size:15px;padding:8px 12px}
+.knoepfe{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.check{display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-weight:600;cursor:pointer}
+.check input{width:24px;height:24px;flex:0 0 24px;margin-top:1px;accent-color:var(--tue)}
+.meldung{margin-top:10px;font-weight:700;min-height:1.4em}
+.meldung.f{color:var(--rot)} .meldung.r{color:var(--gruen)}
+.tipp{background:#fff8e6;border:1.5px dashed var(--gold);border-radius:10px;padding:10px 12px;margin-top:10px}
+.rf{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e3e8ec}
+.rf:last-child{border-bottom:0}
+.rf .wahl{display:flex;gap:6px;flex:0 0 auto}
+.rf .wahl button{padding:7px 10px;font-size:14px;background:#eef2f4;color:#33424f;border:2px solid transparent}
+.rf .wahl button.an.r{background:#dff3e6;border-color:var(--gruen);color:var(--gruen)}
+.rf .wahl button.an.f{background:#fbe3e0;border-color:var(--rot);color:var(--rot)}
+.bilder{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.bild{border:3px solid #d5dde2;border-radius:12px;padding:6px;background:#fff;cursor:pointer;text-align:center}
+.bild.an{border-color:var(--tue);background:var(--hell)}
+.bild b{font-family:"Gochi Hand",cursive;font-size:24px;color:var(--tue)}
+svg .w{stroke:#1e1e1e;stroke-width:3;fill:none;stroke-linecap:round}
+svg .p{stroke:#1e1e1e;stroke-width:4;stroke-linecap:butt}
+svg text{font:700 13px sans-serif;fill:#1e1e1e}
+.kacheln{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.kacheln span{width:46px;height:54px;border-radius:10px;background:#fff3d6;border:2px solid var(--gold);display:grid;place-items:center;font-family:"Gochi Hand",cursive;font-size:32px;color:#7a5410}
+.klein{font-size:14px;color:var(--grau)}
+.versteckt{display:none!important}
+.zeit{font-size:40px;font-weight:800;color:var(--tue);text-align:center;font-variant-numeric:tabular-nums}
+footer{color:#f6e7c899;font-size:12px;text-align:center;margin-top:10px}
+footer button{background:none;color:#f6e7c899;font-size:12px;padding:4px 8px;text-decoration:underline;font-weight:400}
+@media (max-width:480px){h1{font-size:29px}h2{font-size:25px}.karte{padding:14px}body{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="t">⚡ Escape aus Voltas Werkstatt</div>
+    <div class="uhr" id="uhr">⏱ 00:00</div>
+  </header>
+  <div class="schluessel" id="schluessel"></div>
+  <div id="buehne"></div>
+  <footer>Physik Klasse 7 · Kapitel 6 · Die elektrische Spannung · Gymnasium St. Ursula Dorsten<br>
+    <button id="reset">Spiel zurücksetzen</button></footer>
+</div>
+
+<script>
+/* ============ Einstellungen für die Lehrkraft ============ */
+const LEHRER_PIN = '1745';          // Passwort für die Heft-Kontrolle am Ende
+const STRAFE_FALSCH = 20;           // Sekunden pro falscher Eingabe
+const STRAFE_TIPP = 30;             // Sekunden pro Tipp
+const SPEICHER = 'escape-volta-kap6-v1';
+
+/* ============ Schaltpläne für Raum 5 ============ */
+const zelle = (x, y, rev) => {   // Zelle: langer Strich = Plus, kurzer = Minus, gleich dick
+  const L = (xx) => `<line class="p" x1="${xx}" y1="${y-16}" x2="${xx}" y2="${y+16}"/>`;
+  const K = (xx) => `<line class="p" x1="${xx}" y1="${y-8}" x2="${xx}" y2="${y+8}"/>`;
+  return rev ? K(x) + L(x+10) + `<text x="${x+13}" y="${y-19}">+</text><text x="${x-9}" y="${y-19}">−</text>`
+             : L(x) + K(x+10) + `<text x="${x-10}" y="${y-19}">+</text><text x="${x+12}" y="${y-19}">−</text>`;
+};
+const lampe = (cx, cy) => `<circle class="w" cx="${cx}" cy="${cy}" r="15" fill="#fff"/><line class="w" x1="${cx-10}" y1="${cy-10}" x2="${cx+10}" y2="${cy+10}"/><line class="w" x1="${cx-10}" y1="${cy+10}" x2="${cx+10}" y2="${cy-10}"/>`;
+const reihe = (revMitte) => `<svg viewBox="0 0 260 150" width="100%">
+  <polyline class="w" points="80,45 30,45 30,120 115,120"/><polyline class="w" points="145,120 230,120 230,45 190,45"/>
+  <line class="w" x1="90" y1="45" x2="130" y2="45"/><line class="w" x1="140" y1="45" x2="180" y2="45"/>
+  ${zelle(80,45)}${zelle(130,45,revMitte)}${zelle(180,45)}${lampe(130,120)}</svg>`;
+const parallel = `<svg viewBox="0 0 260 160" width="100%">
+  <line class="w" x1="40" y1="32" x2="40" y2="135"/><line class="w" x1="220" y1="32" x2="220" y2="135"/>
+  ${[32,70,108].map(y => `<line class="w" x1="40" y1="${y}" x2="120" y2="${y}"/><line class="w" x1="130" y1="${y}" x2="220" y2="${y}"/>` +
+     `<line class="p" x1="120" y1="${y-12}" x2="120" y2="${y+12}"/><line class="p" x1="130" y1="${y-6}" x2="130" y2="${y+6}"/>`).join('')}
+  <line class="w" x1="40" y1="135" x2="115" y2="135"/><line class="w" x1="145" y1="135" x2="220" y2="135"/>${lampe(130,135)}</svg>`;
+
+/* ============ Die Räume ============ */
+const raeume = [
+  { icon:'📜', titel:'Raum 1 · Voltas Tagebuch', buchstabe:'R',
+    story:'Auf dem Schreibtisch liegt Voltas Tagebuch. Eine Seite ist markiert: „Wer meine Werkstatt verlassen will, muss zuerst wissen, was eine Quelle für die Elektronen tut.“',
+    heft:'<b class="lbl">📖 Im Heft · Seite 17 unten</b><br>Lest beide den Text <b>Kapitel 6 · Die elektrische Spannung</b> still durch. Unterstreicht im Heft: <b>wie man Batterien, Netzgeräte und Generatoren nennt</b>, <b>was die Spannung angibt</b> und <b>in welcher Einheit</b> man sie misst.',
+    schloss:{ typ:'text', frage:'Das Tagebuch hat ein Wortschloss. Ergänzt die Sätze mit den Wörtern, die ihr unterstrichen habt:',
+      felder:[ {label:'Batterien, Netzgeräte und Generatoren heißen …', ok:['spannungsquellen','spannungsquelle']},
+               {label:'Die Spannung wird gemessen in …', ok:['volt','v']} ] },
+    tipp:'Beide Antworten stehen im zweiten Absatz des Textes auf Seite 17 (er beginnt mit „Batterien, Netzgeräte …“).',
+    loesung:'Batterien, Netzgeräte und Generatoren heißen <b>Spannungsquellen</b>. Die Spannung gibt an, <b>wie stark eine Quelle die Elektronen antreibt</b>. Sie wird in <b>Volt (V)</b> gemessen.' },
+
+  { icon:'🧾', titel:'Raum 2 · Der Merkzettel an der Tür', buchstabe:'E',
+    story:'An der Tür zum Lager hängt ein vergilbter Zettel. Darunter ein Schloss mit vier Schaltern. Daneben gekritzelt: „Nur wer die Wahrheit über die Spannung kennt, kommt weiter.“',
+    heft:'<b class="lbl">📖 Im Heft · Seite 18 oben</b><br>Lest den <b>Merke-Kasten</b>. Markiert darin die drei wichtigsten Wörter: <b>passende Spannung</b>, <b>addieren</b> und <b>lebensgefährlich</b>.',
+    schloss:{ typ:'rf', frage:'Stellt jeden Schalter auf „richtig“ oder „falsch“:',
+      aussagen:[ {t:'Eine große Batterie hat immer eine größere Spannung als eine kleine.', w:false},
+                 {t:'Schaltet man Batterien in Reihe, addieren sich ihre Spannungen.', w:true},
+                 {t:'Ist die Spannung zu groß, kann ein Gerät kaputtgehen.', w:true},
+                 {t:'An der Steckdose (230 V) kann man ohne Gefahr experimentieren.', w:false} ] },
+    tipp:'Denkt an das Spielzeugauto aus dem Einstieg: „Groß“ heißt nicht „passend“. Auf der Batterie steht die Spannung in Volt – nicht ihre Größe.',
+    loesung:'falsch – richtig – richtig – falsch.<br>Die <b>Größe</b> einer Batterie sagt nichts über ihre Spannung: Eine kleine Mignonzelle und eine dicke Monozelle haben beide 1,5 V. Die Steckdose ist <b>lebensgefährlich</b>!' },
+
+  { icon:'🔋', titel:'Raum 3 · Das Batterieregal', buchstabe:'B',
+    story:'Im Lager stehen Regale voller Spannungsquellen. Die Schilder sind heruntergefallen. Ein Zahlenschloss sichert die nächste Tür.',
+    heft:'<b class="lbl">✏️ Im Heft · Aufgabe 6.1 (Seite 18)</b><br>Füllt die Tabelle <b>beide in eurem Heft</b> aus. Ordnet zu: 1,5 V · 4,5 V · 5 V · 9 V · 12 V · 230 V.',
+    schloss:{ typ:'text', frage:'Der Code: Lest in eurer Tabelle die Spannungen von <b>Flachbatterie</b>, <b>Blockbatterie</b> und <b>Autobatterie</b> ab. Schreibt die Zahlen ohne Komma und ohne „V“ direkt hintereinander.',
+      felder:[ {label:'Code', ok:['45912'], zahl:true} ] },
+    tipp:'Die Flachbatterie hat drei Zellen zu je 1,5 V. Die Blockbatterie heißt auch „9-V-Block“. Die Autobatterie hat 12 V. Beispiel: 4,5 und 9 und 12 → „4“ „5“ „9“ „1“ „2“.',
+    loesung:'<table><tr><th>Spannungsquelle</th><th>Spannung</th></tr><tr><td>Mignonzelle (AA)</td><td>1,5 V</td></tr><tr><td>Flachbatterie</td><td>4,5 V</td></tr><tr><td>Blockbatterie</td><td>9 V</td></tr><tr><td>USB / Handy-Ladegerät</td><td>5 V</td></tr><tr><td>Autobatterie</td><td>12 V</td></tr><tr><td>Steckdose</td><td>230 V</td></tr></table>' },
+
+  { icon:'🧮', titel:'Raum 4 · Die Rechenmaschine', buchstabe:'A',
+    story:'In der Ecke rattert eine alte Rechenmaschine. Ihr Display zeigt nur: „1,5 V · 1,5 V · 1,5 V …“. Die Maschine öffnet den Geheimgang – wenn ihr richtig rechnet.',
+    heft:'<b class="lbl">✏️ Im Heft · Aufgabe 6.2 (Seite 18)</b><br>Rechnet a) bis d) <b>beide in eurem Heft</b>. Alle Batterien haben 1,5 V und sind in Reihe geschaltet.',
+    schloss:{ typ:'text', frage:'Der Code besteht aus euren vier Ergebnissen von a), b), c) und d) – nur die Zahlen, ohne „V“, hintereinander.',
+      felder:[ {label:'Code', ok:['3662'], zahl:true} ] },
+    tipp:'In Reihe werden die Spannungen addiert: 2 Batterien = 1,5 V + 1,5 V. Für c) und d) rechnet rückwärts: Wie oft passt 1,5 V in 9 V?',
+    loesung:'a) 2 · 1,5 V = <b>3 V</b> &nbsp; b) 4 · 1,5 V = <b>6 V</b> &nbsp; c) 9 V : 1,5 V = <b>6 Batterien</b> &nbsp; d) 3 V : 1,5 V = <b>2 Batterien</b>' },
+
+  { icon:'🗝️', titel:'Raum 5 · Die geheime Flachbatterie', buchstabe:'N',
+    story:'Im Geheimgang liegt eine aufgeschnittene Flachbatterie. Drinnen: drei kleine Zellen. Auf drei Zetteln hat jemand Schaltpläne gezeichnet – nur einer stimmt. Nehmt ihr den falschen, bleibt die Lampe am Ausgang dunkel.',
+    heft:'<b class="lbl">✏️ Im Heft · Aufgabe 6.3 (Seite 18/19)</b><br>Schreibt <b>beide</b> in euer Heft, wie die drei Zellen verbunden sein müssen, damit es 4,5 V sind. Den Schaltplan zeichnet ihr gleich – erst nach dem Schloss.',
+    schloss:{ typ:'bild', frage:'Welcher Schaltplan zeigt die Flachbatterie mit Lampe richtig? Tippt ihn an.',
+      bilder:[ {n:'A', svg:() => reihe(true)}, {n:'B', svg:() => reihe(false)}, {n:'C', svg:() => parallel} ], ok:'B' },
+    tipp:'Die Zellen müssen in Reihe sein: immer der Pluspol (langer Strich) der einen an den Minuspol (kurzer Strich) der nächsten. Ist eine Zelle verdreht, heben sich Spannungen auf.',
+    loesung:'<b>B</b> ist richtig: Die Zellen sind <b>in Reihe</b> geschaltet – immer Plus an Minus. 3 · 1,5 V = 4,5 V.<br>A: Die mittlere Zelle ist verdreht. C: Die Zellen sind nebeneinander (parallel) geschaltet, das ergibt nur 1,5 V.<br><b>Jetzt beide den Schaltplan B in den Kasten „Platz für deinen Schaltplan“ (S. 19) zeichnen!</b>' },
+
+  { icon:'📱', titel:'Raum 6 · Das Handy im Rucksack', buchstabe:'T',
+    story:'Hinter dem Gang liegt ein Rucksack mit einem leeren Handy und einem Beutel Monozellen. Das Handy ist der Schlüssel zum letzten Raum – aber nur, wenn ihr es richtig ladet.',
+    heft:'<b class="lbl">✏️ Im Heft · Aufgabe 6.4 (Seite 19)</b><br>Das Handy braucht <b>mindestens 5 V</b> und verträgt <b>höchstens 8 V</b>. Eine Monozelle hat 1,5 V. Rechnet <b>beide im Heft</b>: Wie viele Zellen in Reihe passen? Tipp: Macht eine kleine Tabelle mit 3, 4, 5 und 6 Zellen.',
+    schloss:{ typ:'text', frage:'Tragt ein, was ihr herausgefunden habt:',
+      felder:[ {label:'Mindestens so viele Zellen:', ok:['4'], zahl:true}, {label:'Höchstens so viele Zellen:', ok:['5'], zahl:true} ] },
+    tipp:'3 Zellen = 4,5 V – reicht das für 5 V? 6 Zellen = 9 V – verträgt das Handy 9 V?',
+    loesung:'<table><tr><th>Zellen</th><th>Spannung</th><th>Passt das?</th></tr><tr><td>3</td><td>4,5 V</td><td>zu wenig</td></tr><tr><td>4</td><td>6 V</td><td>passt</td></tr><tr><td>5</td><td>7,5 V</td><td>passt noch</td></tr><tr><td>6</td><td>9 V</td><td>zu viel</td></tr></table>Man braucht <b>4 oder 5 Zellen</b> in Reihe. 4 Zellen sind am sichersten.' },
+
+  { icon:'💡', titel:'Raum 7 · Die Ausgangslampe', buchstabe:'I',
+    story:'Ihr steht vor der letzten Tür. Daneben eine Lampe mit der Aufschrift „3,5 V“. Erst wenn ihr wisst, wie sie an verschiedenen Batterien reagiert, öffnet sich die Tür.',
+    heft:'<b class="lbl">✏️ Im Heft · Aufgabe 6.5 (Seite 19)</b><br>Beschreibt <b>beide in ganzen Sätzen</b>, was passiert, wenn man die 3,5-V-Lampe a) an eine 1,5-V-Batterie und b) an eine 9-V-Blockbatterie anschließt.',
+    schloss:{ typ:'auswahl', frage:'Wählt aus, was passiert:',
+      felder:[ {label:'a) Lampe (3,5 V) an 1,5 V:', opt:['– bitte wählen –','Sie leuchtet ganz normal.','Sie leuchtet nur schwach oder gar nicht.','Sie brennt sofort durch.'], ok:2},
+               {label:'b) Lampe (3,5 V) an 9 V:', opt:['– bitte wählen –','Sie leuchtet ganz normal.','Sie leuchtet nur schwach oder gar nicht.','Sie leuchtet kurz sehr hell und brennt dann durch.'], ok:3} ] },
+    tipp:'1,5 V ist weniger als 3,5 V – die Elektronen werden zu schwach angetrieben. 9 V ist viel mehr als 3,5 V – der Glühdraht wird zu heiß.',
+    loesung:'a) Die Spannung ist <b>zu klein</b>: Die Lampe leuchtet nur schwach oder gar nicht.<br>b) Die Spannung ist <b>viel zu groß</b>: Die Lampe leuchtet kurz sehr hell und brennt dann durch.' },
+];
+const WORT = 'ANTRIEB';
+
+/* ============ Zustand ============ */
+let S = { phase:'start', raum:0, schritt:'heft', start:null, strafe:0, ende:null, buchstaben:[], tipps:{} };
+try { const g = JSON.parse(localStorage.getItem(SPEICHER)); if (g && g.phase) S = g; } catch(e) {}
+const speichern = () => { try { localStorage.setItem(SPEICHER, JSON.stringify(S)); } catch(e) {} };
+
+const $ = (s) => document.querySelector(s);
+const norm = (s) => String(s).toLowerCase().replace(/[\s.,„“"'!]/g,'').replace(/volt$/,'').trim();
+const normWort = (s) => String(s).toLowerCase().replace(/[\s.,„“"'!]/g,'');
+const sek = () => S.start ? Math.floor(((S.ende || Date.now()) - S.start) / 1000) + S.strafe : 0;
+const mmss = (t) => String(Math.floor(t/60)).padStart(2,'0') + ':' + String(t%60).padStart(2,'0');
+
+function uhr(){ $('#uhr').textContent = '⏱ ' + mmss(sek()); }
+setInterval(uhr, 1000);
+
+function schluesselbund(){
+  $('#schluessel').innerHTML = raeume.map((r,i) => `<span class="${S.buchstaben[i] ? 'da' : ''}">${S.buchstaben[i] || '?'}</span>`).join('')
+    + `<span style="border:0;width:auto;padding:0 6px;font-family:inherit;font-size:13px;color:#f6e7c8aa">Schlüsselbuchstaben</span>`;
+}
+
+function meldung(el, txt, ok){ el.textContent = txt; el.className = 'meldung ' + (ok ? 'r' : 'f'); }
+function strafe(s){ S.strafe += s; speichern(); uhr(); }
+
+/* ============ Bildschirme ============ */
+function zeige(){
+  schluesselbund(); uhr();
+  const B = $('#buehne');
+  if (S.phase === 'start') return startSeite(B);
+  if (S.phase === 'raum') return raumSeite(B);
+  if (S.phase === 'tresor') return tresorSeite(B);
+  if (S.phase === 'kontrolle') return kontrollSeite(B);
+  if (S.phase === 'ende') return endSeite(B);
+}
+
+function startSeite(B){
+  B.innerHTML = `<div class="karte">
+    <div class="kicker">Kapitel 6 · Die elektrische Spannung</div>
+    <h1>Escape aus Voltas Werkstatt</h1>
+    <p class="story">Ihr besucht ein kleines Museum über Alessandro Volta – den Erfinder der Batterie. Nach ihm ist die Einheit <b>Volt</b> benannt. Ihr schaut euch gerade seine alte Werkstatt an, da fällt die Tür hinter euch ins Schloss. An der Innenseite hängt ein Zettel:<br>„Wer verstehen will, wie stark eine Quelle die Elektronen antreibt, findet hinaus. Sieben Schlösser trennen euch von der Freiheit.“</p>
+    <div class="heft"><b class="lbl">So spielt ihr</b>
+      <ul style="margin:6px 0 0;padding-left:20px">
+        <li>Ihr spielt <b>zu zweit</b>. Jedes Kind hat sein <b>Trainingsheft</b> (Seite 17–19), einen Stift und einen <b>grünen Stift</b>.</li>
+        <li>In jedem Raum bearbeitet ihr <b>zuerst die Aufgabe im Heft</b>. Den Code für das Schloss findet ihr nur mit euren Heft-Antworten.</li>
+        <li>Nach jedem Schloss seht ihr die Lösung: Vergleicht und <b>korrigiert mit Grün</b>.</li>
+        <li>Falsche Eingabe: <b>+${STRAFE_FALSCH} Sekunden</b>. Ein Tipp: <b>+${STRAFE_TIPP} Sekunden</b>.</li>
+        <li>Am Ende kontrolliert eure Lehrerin die Hefte. Erst dann seid ihr frei!</li>
+      </ul></div>
+    <div class="knoepfe"><button class="btn" id="los">Die Uhr läuft – los geht’s! ⚡</button></div>
+  </div>`;
+  $('#los').onclick = () => { S.phase = 'raum'; S.raum = 0; S.schritt = 'heft'; S.start = Date.now(); speichern(); zeige(); window.scrollTo(0,0); };
+}
+
+function raumSeite(B){
+  const r = raeume[S.raum], s = r.schloss;
+  let schlossHTML = '';
+  if (s.typ === 'text') schlossHTML = s.felder.map((f,i) => `<div class="feld"><label for="f${i}">${f.label}</label><input type="text" id="f${i}" autocomplete="off" autocapitalize="off" ${f.zahl ? 'inputmode="numeric"' : ''}></div>`).join('');
+  if (s.typ === 'rf') schlossHTML = s.aussagen.map((a,i) => `<div class="rf"><span>${a.t}</span><span class="wahl"><button data-i="${i}" data-v="1" class="r">richtig</button><button data-i="${i}" data-v="0" class="f">falsch</button></span></div>`).join('');
+  if (s.typ === 'bild') schlossHTML = `<div class="bilder">${s.bilder.map(b => `<div class="bild" data-n="${b.n}"><b>${b.n}</b>${b.svg()}</div>`).join('')}</div>`;
+  if (s.typ === 'auswahl') schlossHTML = s.felder.map((f,i) => `<div class="feld"><label for="f${i}">${f.label}</label><select id="f${i}">${f.opt.map((o,j) => `<option value="${j}">${o}</option>`).join('')}</select></div>`).join('');
+
+  B.innerHTML = `<div class="karte">
+    <div class="kicker">Schloss ${S.raum + 1} von ${raeume.length}</div>
+    <h2>${r.icon} ${r.titel}</h2>
+    <p class="story">${r.story}</p>
+    <div class="heft">${r.heft}</div>
+    <label class="check ${S.schritt !== 'heft' ? 'versteckt' : ''}" id="heftCheck"><input type="checkbox" id="hc"> Wir haben die Aufgabe beide im Heft bearbeitet.</label>
+    <div class="schloss ${S.schritt === 'heft' ? 'versteckt' : ''}" id="schloss">
+      <div class="lbl">🔒 ${s.frage}</div>
+      ${schlossHTML}
+      <div class="knoepfe ${S.schritt === 'geloest' ? 'versteckt' : ''}" id="schlossKnoepfe"><button class="btn" id="pruefen">Schloss öffnen</button><button class="btnt" id="tippBtn">💡 Tipp (+${STRAFE_TIPP} s)</button></div>
+      <div class="tipp ${S.tipps[S.raum] ? '' : 'versteckt'}" id="tipp">💡 ${r.tipp}</div>
+      <div class="meldung" id="mel"></div>
+    </div>
+    <div class="loesung ${S.schritt === 'geloest' ? '' : 'versteckt'}" id="loes">
+      <div class="lbl">✔ Das Schloss springt auf! Ihr bekommt den Buchstaben „${r.buchstabe}“.</div>
+      <p style="margin:6px 0">Vergleicht jetzt mit eurem Heft und <b>korrigiert mit grünem Stift</b>:</p>
+      <div>${r.loesung}</div>
+      <label class="check"><input type="checkbox" id="kc"> Wir haben beide verglichen und mit Grün korrigiert.</label>
+      <button class="btn" id="weiter" disabled>${S.raum + 1 < raeume.length ? 'Weiter zum nächsten Raum →' : 'Weiter zum Ausgang →'}</button>
+    </div>
+  </div>`;
+
+  // Heft zuerst
+  const hc = $('#hc');
+  if (hc) hc.onchange = () => { if (hc.checked) { S.schritt = 'schloss'; speichern(); $('#heftCheck').classList.add('versteckt'); $('#schloss').classList.remove('versteckt'); } };
+
+  // Auswahl-Logik
+  const rfWahl = {};
+  if (s.typ === 'rf') B.querySelectorAll('.rf .wahl button').forEach(b => b.onclick = () => {
+    const i = b.dataset.i; rfWahl[i] = b.dataset.v === '1';
+    b.parentNode.querySelectorAll('button').forEach(x => x.classList.remove('an')); b.classList.add('an');
+  });
+  let bildWahl = null;
+  if (s.typ === 'bild') B.querySelectorAll('.bild').forEach(b => b.onclick = () => {
+    B.querySelectorAll('.bild').forEach(x => x.classList.remove('an')); b.classList.add('an'); bildWahl = b.dataset.n;
+  });
+
+  $('#tippBtn').onclick = () => { if (!S.tipps[S.raum]) { S.tipps[S.raum] = true; strafe(STRAFE_TIPP); } $('#tipp').classList.remove('versteckt'); };
+
+  $('#pruefen').onclick = () => {
+    const mel = $('#mel'); let ok = false, unvollst = false;
+    if (s.typ === 'text') {
+      const werte = s.felder.map((f,i) => $('#f'+i).value);
+      if (werte.some(w => !w.trim())) unvollst = true;
+      ok = s.felder.every((f,i) => f.ok.includes(f.zahl ? werte[i].replace(/\D/g,'') : norm(werte[i])) || f.ok.includes(normWort(werte[i])));
+    }
+    if (s.typ === 'rf') { if (Object.keys(rfWahl).length < s.aussagen.length) unvollst = true; ok = s.aussagen.every((a,i) => rfWahl[i] === a.w); }
+    if (s.typ === 'bild') { if (!bildWahl) unvollst = true; ok = bildWahl === s.ok; }
+    if (s.typ === 'auswahl') { const w = s.felder.map((f,i) => +$('#f'+i).value); if (w.includes(0)) unvollst = true; ok = s.felder.every((f,i) => w[i] === f.ok); }
+    if (unvollst) return meldung(mel, 'Füllt erst alles aus.', false);
+    if (!ok) { strafe(STRAFE_FALSCH); return meldung(mel, `Das Schloss bleibt zu. +${STRAFE_FALSCH} Sekunden. Schaut noch einmal in euer Heft!`, false); }
+    S.schritt = 'geloest'; S.buchstaben[S.raum] = r.buchstabe; speichern();
+    schluesselbund(); meldung(mel, '', true);
+    $('#schlossKnoepfe').classList.add('versteckt'); $('#loes').classList.remove('versteckt');
+    $('#loes').scrollIntoView({behavior:'smooth', block:'start'});
+  };
+
+  const kc = $('#kc'); kc.onchange = () => { $('#weiter').disabled = !kc.checked; };
+  $('#weiter').onclick = () => {
+    if (S.raum + 1 < raeume.length) { S.raum++; S.schritt = 'heft'; } else { S.phase = 'tresor'; }
+    speichern(); zeige(); window.scrollTo(0,0);
+  };
+}
+
+function tresorSeite(B){
+  B.innerHTML = `<div class="karte">
+    <div class="kicker">Die letzte Tür</div>
+    <h2>🚪 Das Buchstabenschloss</h2>
+    <p class="story">Die Ausgangslampe leuchtet. Auf der Tür steht in Voltas Handschrift: „Bringt eure sieben Buchstaben in die richtige Reihenfolge. Das Wort sagt, was die Spannung für die Elektronen ist.“</p>
+    <div class="kacheln">${S.buchstaben.map(b => `<span>${b}</span>`).join('')}</div>
+    <div class="feld"><label for="wort">Lösungswort</label><input type="text" id="wort" autocomplete="off" autocapitalize="characters"></div>
+    <div class="knoepfe"><button class="btn" id="ok">Tür öffnen</button><button class="btnt" id="tippBtn">💡 Tipp (+${STRAFE_TIPP} s)</button></div>
+    <div class="tipp ${S.tipps.wort ? '' : 'versteckt'}" id="tipp">💡 Raum 1: Die Spannung gibt an, wie stark eine Quelle die Elektronen <b>an…</b> Das Wort beginnt mit A.</div>
+    <div class="meldung" id="mel"></div></div>`;
+  $('#tippBtn').onclick = () => { if (!S.tipps.wort) { S.tipps.wort = true; strafe(STRAFE_TIPP); } $('#tipp').classList.remove('versteckt'); };
+  $('#ok').onclick = () => {
+    const w = normWort($('#wort').value);
+    if (!w) return meldung($('#mel'), 'Gebt erst ein Wort ein.', false);
+    if (w !== WORT.toLowerCase()) { strafe(STRAFE_FALSCH); return meldung($('#mel'), `Falsch. +${STRAFE_FALSCH} Sekunden.`, false); }
+    S.phase = 'kontrolle'; S.ende = Date.now(); speichern(); zeige(); window.scrollTo(0,0);
+  };
+}
+
+function kontrollSeite(B){
+  B.innerHTML = `<div class="karte">
+    <div class="kicker">Fast geschafft</div>
+    <h2>✋ Heft-Kontrolle</h2>
+    <p>Die Uhr ist angehalten: <b>${mmss(sek())}</b>.</p>
+    <div class="heft"><b class="lbl">Bringt eure Hefte nach vorne</b><br>Eure Lehrerin prüft:
+      <ul style="margin:6px 0 0;padding-left:20px">
+        <li>Unterstreichungen im Text und im Merke (S. 17/18)</li>
+        <li>Aufgaben 6.1 bis 6.5 ausgefüllt</li>
+        <li>Schaltplan im Kasten (S. 19)</li>
+        <li>mit grünem Stift korrigiert</li></ul></div>
+    <div class="feld"><label for="pin">Passwort der Lehrerin</label><input type="text" id="pin" inputmode="numeric" autocomplete="off" style="-webkit-text-security:disc"></div>
+    <div class="knoepfe"><button class="btn" id="ok">Freiheit!</button></div>
+    <div class="meldung" id="mel"></div></div>`;
+  $('#ok').onclick = () => {
+    if ($('#pin').value.trim() !== LEHRER_PIN) return meldung($('#mel'), 'Das Passwort stimmt nicht.', false);
+    S.phase = 'ende'; speichern(); zeige(); window.scrollTo(0,0);
+  };
+}
+
+function endSeite(B){
+  B.innerHTML = `<div class="karte" style="text-align:center">
+    <div class="kicker">Geschafft!</div>
+    <h1>🎉 Ihr seid frei!</h1>
+    <p>Eure Zeit (mit allen Strafsekunden):</p>
+    <div class="zeit">${mmss(sek())}</div>
+    <p class="story" style="text-align:left">Die Tür schwingt auf. Auf dem letzten Zettel steht: „Bravo! Die Spannung ist der <b>Antrieb</b> für die Elektronen. Und denkt an das Spielzeugauto: Es braucht vier Batterien in Reihe, also 6 V. Die große 9-V-Batterie hat zu viel Spannung – der Motor kann zu heiß werden. Groß heißt nicht passend!“<br>– Alessandro Volta</p>
+    <p class="klein">Nennt eurer Lehrerin eure Zeit.</p></div>`;
+}
+
+/* Zurücksetzen: zweimal tippen */
+let resetArm = false;
+$('#reset').onclick = () => {
+  if (!resetArm) { resetArm = true; $('#reset').textContent = 'Wirklich alles löschen? Noch einmal tippen.'; setTimeout(() => { resetArm = false; $('#reset').textContent = 'Spiel zurücksetzen'; }, 4000); return; }
+  try { localStorage.removeItem(SPEICHER); } catch(e) {}
+  S = { phase:'start', raum:0, schritt:'heft', start:null, strafe:0, ende:null, buchstaben:[], tipps:{} };
+  resetArm = false; $('#reset').textContent = 'Spiel zurücksetzen'; zeige();
+};
+
+zeige();
+</script>
+</body>
+</html>
